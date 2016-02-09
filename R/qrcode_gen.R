@@ -48,7 +48,14 @@ qrcode_gen <- function(dataString,ErrorCorrectionLevel='L',dataOutput = FALSE, p
     #apply mask
     dataMasked <- qrMask(data,qrInfo,mask)
     if(plotQRcode){
-      heatmap(dataMasked[nrow(dataMasked):1,],Rowv = NA, Colv = NA,scale="none",col=c(wColor,bColor),labRow ='',labCol = '')
+      # temporarily get rid of margins
+      opar <- par(mar = c(0,0,0,0))
+      on.exit( par(opar) )
+      # get matrix dimensions
+      nc = ncol(dataMasked)
+      nr = nrow(dataMasked)
+      # plot the QR matrix
+      image(1L:nc, 1L:nr, t(dataMasked), xlim = 0.5 + c(0, nc), ylim = 0.5 + c(nr, 0), axes = FALSE, xlab = "", ylab = "", col = c(wColor, bColor), asp = 1)
     }
     if(dataOutput){
       return(dataMasked)
